@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	// "hello/greetings"
+	// "hello/routine"
 	// "log"
 	"math"
 	"runtime"
@@ -144,6 +144,10 @@ func (v Vertex) Abs() float64 {
 	return math.Sqrt(v.x*v.x + v.y*v.y)
 }
 
+func (v Vertex) String() string {
+	return fmt.Sprintf("x: %f y: %f", v.x, v.y)
+}
+
 func TestMethods() {
 	// Go does not have classes. However, you can define methods on types
 	// A method is a function wiht receiver argument.
@@ -157,6 +161,8 @@ type Abser interface {
 
 type MyFloat float64
 
+// Interfaces are implemented implicitly, no explicit declaration of intent,
+// no "implements" keyword
 func (f MyFloat) Abs() float64 {
 	if f < 0 {
 		return float64(-f)
@@ -169,12 +175,27 @@ func TestInterface() {
 	v := Vertex{1,2}
 	a = &v
 	fmt.Println(a.Abs())
+	t := a.(*Vertex)
+
+	fmt.Println(t.Abs())
+	fmt.Println(t)
 
 	f := MyFloat(2.0)
 	a = f
 	fmt.Println(a.Abs())
 }
 
+// seems unable to go say("Mr") in the module hello/routine
+func say(s string) {
+	fmt.Println(s, "======")
+	for i:=0; i<3; i++ {
+		time.Sleep(100 * time.Millisecond)
+		fmt.Println(s, time.Millisecond)
+	}
+}
+
+
 func main() {
-	TestInterface()
+	go say("Mr")
+	say("world")
 }
