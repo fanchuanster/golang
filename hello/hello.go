@@ -134,6 +134,47 @@ func printSlice(s []int) {
 	fmt.Printf("len=%d cap=%d %v\n", len(s), cap(s), s)
 }
 
+type Vertex struct {
+	x, y float64
+}
+
+// following (v Vertex) is the receiver of method Abs()
+// a method can be defined for a non-struct (primitive) type, too.
+func (v Vertex) Abs() float64 {
+	return math.Sqrt(v.x*v.x + v.y*v.y)
+}
+
+func TestMethods() {
+	// Go does not have classes. However, you can define methods on types
+	// A method is a function wiht receiver argument.
+	v := Vertex{3,4}
+	fmt.Println(v.Abs())
+}
+
+type Abser interface {
+	Abs() float64
+}
+
+type MyFloat float64
+
+func (f MyFloat) Abs() float64 {
+	if f < 0 {
+		return float64(-f)
+	}
+	return float64(f)
+}
+
+func TestInterface() {
+	var a Abser
+	v := Vertex{1,2}
+	a = &v
+	fmt.Println(a.Abs())
+
+	f := MyFloat(2.0)
+	a = f
+	fmt.Println(a.Abs())
+}
+
 func main() {
-	TestFunctionClosures()
+	TestInterface()
 }
