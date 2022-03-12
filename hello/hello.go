@@ -77,6 +77,8 @@ func main() {
 		// defer at function level, not scope level.
 		// following defer is executed right before the first defer.
 		// defer lines are executed in a reverse order
+		// summary: defer lines are pushed to a stack, when function returns
+		// executed at a first-in-last-out order - https://go.dev/tour/flowcontrol/13
 		defer fmt.Println("defer ShowCurrentOSName")
 		defer fmt.Println("defer ShowCurrentOSName2")
 		ShowCurrentOSName()
