@@ -72,10 +72,15 @@ func main() {
 	fmt.Println("math.Sqrt is %f", math.Sqrt(n))
 
 	SwitchWithNoCondition()
-	
+
 	if 2>1 {
+		// defer at function level, not scope level.
+		// following defer is executed right before the first defer.
+		// defer lines are executed in a reverse order
+		defer fmt.Println("defer ShowCurrentOSName")
+		defer fmt.Println("defer ShowCurrentOSName2")
 		ShowCurrentOSName()
 	}
 	
-
+	fmt.Println("last line of main")
 }
