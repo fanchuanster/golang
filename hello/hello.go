@@ -194,8 +194,29 @@ func say(s string) {
 	}
 }
 
-
-func main() {
+func TestGoroutine() {
 	go say("Mr")
 	say("world")
+}
+
+func sum(s []int, c chan int) {
+	res := 0
+	for _, i := range s {
+		res += i
+	}
+	c <- res
+}
+
+func TestChannel() {
+	s := []int{1,2,3,4,4,3,1}
+	c := make(chan int)
+	go sum(s[:len(s)/2], c)
+	go sum(s[len(s)/2:], c)
+	x, y := <-c, <-c
+	fmt.Println(x,y, x+y)
+}
+
+
+func main() {
+	TestChannel()
 }
