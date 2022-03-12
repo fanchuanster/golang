@@ -5,11 +5,38 @@ import (
 	// "hello/greetings"
 	// "log"
 	"math"
+	"runtime"
+	"time"
 )
+
+func ShowCurrentOSName() {
+	fmt.Println("Go runs on")
+	switch os := runtime.GOOS; os {
+	case "darwin":
+		fmt.Println("OS X")
+	case "linux":
+		fmt.Println("Linux.")
+	default:
+		fmt.Println(os)
+	}
+}
+
+func SwitchWithNoCondition() {
+	t := time.Now()
+	defer fmt.Println("show at end of SwitchWithNoCondition")
+	switch {
+	case t.Hour() < 12:
+		fmt.Println("Good morning")
+	case t.Hour() < 17:
+		fmt.Println("Good afternoon")
+	default:
+		fmt.Println("Good evening")
+	}
+}
 
 func Sqrt(x float64) float64 {
 	// z := x/2
-	z := 1
+	z := float64(1)
 	// Newton's method - (z*z - x)/(2*z)
 	// https://en.wikipedia.org/wiki/Newton%27s_method
 	for ; math.Abs(z*z - x) > 0.00001; z -= (z*z - x)/(2*z) {
@@ -38,7 +65,17 @@ func FuzzBuzz(n int) {
 }
 
 func main() {
+	t := time.Now()
+	defer fmt.Println("return in the end, started at %v", t)
 	var n float64 = 200
 	fmt.Println(Sqrt(n))
 	fmt.Println("math.Sqrt is %f", math.Sqrt(n))
+
+	SwitchWithNoCondition()
+	
+	if 2>1 {
+		ShowCurrentOSName()
+	}
+	
+
 }
