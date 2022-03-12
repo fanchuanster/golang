@@ -64,7 +64,7 @@ func FuzzBuzz(n int) {
 	}
 }
 
-func main() {
+func Test1() {
 	t := time.Now()
 	defer fmt.Println("return in the end, started at %v", t)
 	var n float64 = 200
@@ -85,4 +85,55 @@ func main() {
 	}
 	
 	fmt.Println("last line of main")
+}
+
+func Test2() {
+	s := []int{1,2,3,4}
+	printSlice(s)
+
+	s = s[:2]
+	printSlice(s)
+
+	s = s[:3]
+	printSlice(s)
+}
+
+func Test3() {
+	s := make([]int, 0, 5)
+	printSlice(s)
+
+	s = append(s, 1,2,3,4,5)
+	printSlice(s)
+
+	s = append(s, 1,2,3)
+	printSlice(s)
+}
+
+func adder() func(int) int {
+	sum := 0
+	return func(x int) int {
+		sum += x
+		return sum
+	}
+}
+
+func TestFunctionClosures() {
+	// each adder is stateful, each closure is bound to its own inner
+	// variable sum.
+	pos, neg := adder(), adder()
+	for i:=1; i<5; i+=2 {
+		fmt.Println(
+			pos(i),
+			neg(-i),
+		)
+	}
+
+}
+
+func printSlice(s []int) {
+	fmt.Printf("len=%d cap=%d %v\n", len(s), cap(s), s)
+}
+
+func main() {
+	TestFunctionClosures()
 }
