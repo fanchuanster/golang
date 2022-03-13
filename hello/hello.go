@@ -3,11 +3,14 @@ package main
 import (
 	"fmt"
 	// "hello/routine"
-	// "log"
+	"os"
+	"log"
 	"math"
 	"runtime"
 	"time"
 )
+
+var logger *log.Logger
 
 func ShowCurrentOSName() {
 	fmt.Println("Go runs on")
@@ -205,15 +208,29 @@ func sum(s []int, c chan int) {
 		res += i
 	}
 	c <- res
+	
+	logger.Println("sent to chan c", res, time.Now())
+}
+
+func init() {
+	logger = log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime)
 }
 
 func TestChannel() {
 	s := []int{1,2,3,4,4,3,1}
-	c := make(chan int)
+	c := make(chan int, 10)
 	go sum(s[:len(s)/2], c)
 	go sum(s[len(s)/2:], c)
-	x, y := <-c, <-c
+	logger.Println("sleep 2 seconds before receiving from chan c")
+	time.Sleep(2 * time.Second)
+	x := <-c
+	logger.Println("received x", x)
+	time.Sleep(2 * time.Second)
+	y := <-c
+	logger.Println("received y", y)
 	fmt.Println(x,y, x+y)
+
+	time.Sleep(2 * time.Second)
 }
 
 
