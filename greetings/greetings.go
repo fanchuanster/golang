@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// as the func name begins with upper-case letter, it's exported and can be used by other packages that import this package
 func Hello(name string) (string, error) {
 	if name == "" {
 		return "", errors.New("empty name")

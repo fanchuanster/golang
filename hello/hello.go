@@ -26,6 +26,7 @@ func ShowCurrentOSName() {
 
 func SwitchWithNoCondition() {
 	t := time.Now()
+	// defer is like final block of a method/function
 	defer fmt.Println("show at end of SwitchWithNoCondition")
 	switch {
 	case t.Hour() < 12:
@@ -216,6 +217,15 @@ func init() {
 	logger = log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime)
 }
 
+// select statements lets a goroutine wait on multiple communication operations. e.g.:
+// select {
+// case c<- x:
+// 	//...
+// case <-quit:
+// 	quit...
+// default:
+// 	without blocking, just loop trying...
+// }
 func TestChannel() {
 	s := []int{1,2,3,4,4,3,1}
 	c := make(chan int, 10)
@@ -233,6 +243,7 @@ func TestChannel() {
 	time.Sleep(2 * time.Second)
 }
 
+// sync.Mutex - Lock & Unlock for mutual exclusion
 
 func main() {
 	TestChannel()
