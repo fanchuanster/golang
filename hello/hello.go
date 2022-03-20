@@ -8,6 +8,9 @@ import (
 	"math"
 	"runtime"
 	"time"
+	"flag"
+	"net/http"
+	"html/template"
 )
 
 var logger *log.Logger
@@ -244,7 +247,70 @@ func TestChannel() {
 }
 
 // sync.Mutex - Lock & Unlock for mutual exclusion
+var addr = flag.String("addr", ":1717", "http service address")
+var templ = template.Must(template.New("qr").Parse(templateStr))
+func TestHttpServer() {
+	flag.Parse()
+	fmt.Println("addr", *addr)
+	http.Handle("/", http.HandlerFunc(QR))
+	err := http.ListenAndServe(*addr, nil)
+	if err != nil {
+		log.Fatal("ListenAndServer:", err)
+	}
+	log.Fatal("ListenAndServer:", err)
+}
+
+type Person struct {
+	Name string
+	Age int
+}
+
+type inter interface {
+	String2() string
+}
+
+func (p Person) String() string {
+	return fmt.Sprintf("Person %v Age %v", p.Name, p.Age)
+}
+
+type Stringer2 fmt.Stringer
 
 func main() {
-	TestChannel()
+	p := Person{"Carl", 23}
+	var stringer fmt.Stringer = p
+	s := stringer.(inter)
+	// if ok {
+	// 	fmt.Println("ok")
+	// } else {
+	// 	fmt.Println("not ok")
+	// }
+	fmt.Println(p, s)
 }
+
+func QR(w http.ResponseWriter, req *http.Request) {
+	fmt.Println("QR func - req.FormValue(s)", req.FormValue("s"))
+	err := templ.Execute(w, req.FormValue("s"))
+	if err != nil {
+		log.Fatal("templ.Execute err", err)
+	}
+}
+
+const templateStr = `
+<html>
+<head>
+<title>QR Link Generator</title>
+</head>
+<body>
+{{if .}}
+<img src="http://chart.apis.google.com/chart?chs=300x300&cht=qr&choe=UFT-8&chl={{.}}" />
+<br>
+{{.}}
+<br>
+{{end}}
+<form action="/" name=f method="GET">
+	<input maxLength=1024 size=70 name=s value="" title="Text to QR Encode">
+	<input type=submit value="Show QR" name=qr>
+</form>
+</body>
+</html>
+`
